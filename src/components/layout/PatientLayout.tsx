@@ -12,8 +12,8 @@ export function PatientLayout() {
         style={{ background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(8px)' }}
       >
         <div className="flex items-center gap-3">
-          <img alt="Fisio Élite Logo" className="h-8 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx7PK7ax6Nr-MRJd5H8BXAaWtdFWfWX1anpVruNpywVty5UldqrvZ37g2fBKMSHQN3IqKLg2uwzhQBE9HTrkeb4XaC2EMqvRIojCrEyJ4d9CM7jV4d6rZrtNWf-bFD3F149iFuv7kwwXUM7wteZ7UBbF-El4jW_W67tKIwQchdCaau7qcoY4WceCIvj1j2f7hYQ4i8MQoGHCR-9jR9wzbFzHwwLzMgNgDHE-7otBB-rdozRDUoRVWolAxstT0ApJ52GoOU_XlqKAyj" />
-          <span className="text-xl font-bold tracking-tight text-teal-800 font-headline">Fisio Élite</span>
+          <img alt="Fisio Élite Logo" className="h-8 w-auto" src="/logo.png" />
+          <span className="text-xl font-bold tracking-tight text-teal-800 font-headline hidden sm:inline-block">Fisio Élite</span>
         </div>
         <Menu 
           mode="horizontal" 

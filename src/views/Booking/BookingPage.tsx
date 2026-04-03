@@ -1,10 +1,10 @@
 import { Card, Button, Alert } from 'antd';
-import { 
-  RightOutlined, 
-  LeftOutlined, 
-  CheckCircleFilled, 
-  MedicineBoxOutlined, 
-  TeamOutlined, 
+import {
+  RightOutlined,
+  LeftOutlined,
+  CheckCircleFilled,
+  MedicineBoxOutlined,
+  TeamOutlined,
   CalendarOutlined,
   InfoCircleOutlined
 } from '@ant-design/icons';
@@ -84,7 +84,7 @@ function StepTwo({ active, onSelect }: any) {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <SpecialistCard id="cualquiera" active={active === 'cualquiera'} onClick={() => onSelect('cualquiera')} name="Cualquier Profesional" spec="Asignación automática" img="" />
         <SpecialistCard id="marcos" active={active === 'marcos'} onClick={() => onSelect('marcos')} name="Dr. Marcos Silva" spec="Esp. en Deporte" img="https://lh3.googleusercontent.com/aida-public/AB6AXuBVbNIb8wB4tF2fRn8F2sOvPrIAKktl3M0HIV6uOHFgAm1_-1zvq7Ss-CrGfIPj8skhhI7DcoCOx7CdEky1yFfOD6gnKngVScwCxZX0rEMmHWP95Z7k3ac4U9e2MguUoKgklztvrd-fWDPHEZInxh3fkx5LcTROFUK7xLmetvy_04JO17y2tocMTAvxaZnbyYy7KJHUfzarWZSuyYTIfNkfEmpL8bTvSuwVjDMGXofKjyrrREpqKsXKPP7oojETD5aWzUPK962rwH6X" />
-        <SpecialistCard id="lucia" active={active === 'lucia'} onClick={() => onSelect('lucia')} name="Dra. Lucía Méndez" spec="Osteópata Senior" img="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ8OU_dJJMM2buGFVEWy9ic0vJjCYhN2RoiOfWqmNbesonEbmBAS3EeEQ9BPN8z3GmoiymHCaPWzGAOK0PX2LMTJpDvy8GNIhpgGIfslKTc1cLygqgWMxDA3Rnjyl1h8r3ZDyNNu7Bqqa0x_tPfRLfBa32EeOs4KIHmgEaVtnk1z921kH9uYUrMpmElTBKYyW7lEWgyxcuP0iqG6MlFMYhWz3WsOrB_2ajAWXvpGoYGWfim3Bqv9UceKxeXdeIaKNeK6M9YINOD6pG" />
+        <SpecialistCard id="lucia" active={active === 'lucia'} onClick={() => onSelect('lucia')} name="Dra. Anny Upareja" spec="Osteópata Senior" img="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ8OU_dJJMM2buGFVEWy9ic0vJjCYhN2RoiOfWqmNbesonEbmBAS3EeEQ9BPN8z3GmoiymHCaPWzGAOK0PX2LMTJpDvy8GNIhpgGIfslKTc1cLygqgWMxDA3Rnjyl1h8r3ZDyNNu7Bqqa0x_tPfRLfBa32EeOs4KIHmgEaVtnk1z921kH9uYUrMpmElTBKYyW7lEWgyxcuP0iqG6MlFMYhWz3WsOrB_2ajAWXvpGoYGWfim3Bqv9UceKxeXdeIaKNeK6M9YINOD6pG" />
       </div>
     </Card>
   );
@@ -141,14 +141,14 @@ function StepThree({ activeTime, onSelectTime }: any) {
           <h4 className="font-bold mb-4">Horarios Disponibles</h4>
           <div className="grid grid-cols-3 gap-2">
             {['09:00', '10:00', '11:30', '13:00', '16:30', '18:00'].map(t => (
-               <Button
+              <Button
                 key={t}
                 type={activeTime === t ? 'primary' : 'default'}
                 className={`w-full rounded-xl ${activeTime === t ? 'bg-primary-container text-on-primary-container border-0' : ''}`}
                 onClick={() => onSelectTime(t)}
-               >
-                 {t}
-               </Button>
+              >
+                {t}
+              </Button>
             ))}
           </div>
         </div>
@@ -177,7 +177,7 @@ function BookingSummary() {
           </div>
           <div>
             <p className="text-xs text-on-surface-variant font-medium uppercase tracking-wider mb-0">Profesional</p>
-            <p className="font-bold mb-0">Dra. Lucía Méndez</p>
+            <p className="font-bold mb-0">Dra. Anny Upareja</p>
           </div>
         </li>
         <li className="flex gap-4">
@@ -195,12 +195,12 @@ function BookingSummary() {
           <span className="text-on-surface-variant font-medium">Sesión inicial (60 min)</span>
           <span className="text-xl font-extrabold font-headline">65,00€</span>
         </div>
-        <Button 
-           type="primary" 
-           size="large" 
-           className="w-full bg-gradient-to-br from-primary to-primary-container h-12 rounded-xl font-bold border-0 shadow-lg"
-           icon={<RightOutlined />} 
-           iconPosition="end"
+        <Button
+          type="primary"
+          size="large"
+          className="w-full bg-gradient-to-br from-primary to-primary-container h-12 rounded-xl font-bold border-0 shadow-lg"
+          icon={<RightOutlined />}
+          iconPosition="end"
         >
           Confirmar Reserva
         </Button>

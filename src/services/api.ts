@@ -32,7 +32,7 @@ export const fisioEliteApiService = {
     // const response = await fetch(`${API_BASE_URL}/therapists${specialtyId ? `?specialty=${specialtyId}` : ''}`);
     return Promise.resolve([
       { id: '1', name: 'Dr. Marcos Silva', specialty: 'Deporte' },
-      { id: '2', name: 'Dra. Lucía Méndez', specialty: 'Osteopatía' }
+      { id: '2', name: 'Dra. Anny Upareja', specialty: 'Osteopatía' }
     ]);
   },
 

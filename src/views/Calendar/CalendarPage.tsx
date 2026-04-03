@@ -1,9 +1,9 @@
 import { Card, Button, Select, Badge, Tooltip } from 'antd';
-import { 
-  FilterOutlined, 
-  PlusOutlined, 
-  CalendarOutlined, 
-  LeftOutlined, 
+import {
+  FilterOutlined,
+  PlusOutlined,
+  CalendarOutlined,
+  LeftOutlined,
   RightOutlined
 } from '@ant-design/icons';
 
@@ -16,7 +16,7 @@ export function CalendarPage() {
       <div className="flex justify-between items-end mb-6">
         <div>
           <h2 className="text-3xl font-black font-headline tracking-tight text-on-surface mb-0">Agenda de Citas</h2>
-          <p className="text-on-surface-variant font-label text-sm mt-1 mb-0">Martes, 14 de Mayo, 2024</p>
+          <p className="text-on-surface-variant font-label text-sm mt-1 mb-0">Martes, 14 de Mayo, 2026</p>
         </div>
         <div className="flex items-center gap-2 bg-surface-container-low p-1 rounded-xl">
           <Button type="text" className="px-6 rounded-lg text-sm font-bold bg-white text-teal-700 shadow-sm transition-all hover:bg-white hover:text-teal-800">Hoy</Button>
@@ -42,7 +42,7 @@ export function CalendarPage() {
               <CalendarOutlined className="text-slate-400 text-xl" />
             </div>
             <HeaderCell name="Dr. Marcos Silva" spec="Fisioterapia Deportiva" img="https://lh3.googleusercontent.com/aida-public/AB6AXuB5wUglMnrP9y18a_ZzQ3sFzv60MF7G9TlRsfgvwWwc7QxiYMemKjnrK02bDAC0HQqEOvczvdQ2ZjwoPTxyPIhd8fRZqWplmilSPjysQcJ3JD9WKOYx1JGzs82xmvcdyn4BhQXNI2zfp3eqxa81unL5rYMO2tPt6i36xiyvg8JX07LPqcj_7GahnvmbvRdbGXTWtMiMOvbjMQulbzzdUw_JyAq-ck4t5OzuTlTwZ64DFVar3jr1X5vSUi5qTqLaOBUtceMqDOIM6uTF" color="text-teal-600" />
-            <HeaderCell name="Dra. Lucía Méndez" spec="Osteopatía" img="https://lh3.googleusercontent.com/aida-public/AB6AXuBb1c7aSi_Sr1-WDH2WPVKWc6zH_WUqeVRQtsBN-8kCSEY-O-xX-pq5aePYuWEbirx67vnyQIVe_V_hdCj84uDsfF_qtZLUq-x2n3RimayokPd74G0SCJl3FehPckIJFqZXJy7XgvhRcvCN--LERWMrYPf5XHIgkuUNmZsxLs2Y3c0Iz2FSBWTbwwZnGFi0XAtbwC3qvI4gaDFQ2Gk-oIqG7yHAhS5vnPTfAYcXYxVDpU69cBniUQbctG20nlGIyYs0EB5zFrFtadvf" color="text-tertiary" />
+            <HeaderCell name="Dra. Anny Upareja" spec="Osteopatía" img="https://lh3.googleusercontent.com/aida-public/AB6AXuBb1c7aSi_Sr1-WDH2WPVKWc6zH_WUqeVRQtsBN-8kCSEY-O-xX-pq5aePYuWEbirx67vnyQIVe_V_hdCj84uDsfF_qtZLUq-x2n3RimayokPd74G0SCJl3FehPckIJFqZXJy7XgvhRcvCN--LERWMrYPf5XHIgkuUNmZsxLs2Y3c0Iz2FSBWTbwwZnGFi0XAtbwC3qvI4gaDFQ2Gk-oIqG7yHAhS5vnPTfAYcXYxVDpU69cBniUQbctG20nlGIyYs0EB5zFrFtadvf" color="text-tertiary" />
             <HeaderCell name="Dr. Javier Ruiz" spec="Rehabilitación" img="https://lh3.googleusercontent.com/aida-public/AB6AXuBwG04EJHWGcge4EI8EYDXwJsJrd0AEMNaGFvpdII4kgCU3BxciPrzFAN673DYvFlHmWZwmHSBcEHz7mS38AyPePtIM5HtfNbNy9-O3-RWthAZ5rLwCybfwoiZeslDkT0jymJvO3wTKFYmcq3wFrSM0YOB1Psaqavx8yPM013IObvNE7O6kPIJYtCeiZlcEApd4rZJZgeY9wCkrzbvLblsFBdfgPFVLCVHB1B5409kzGahqOrfvzqeELNOq8bXHHgEs9LOuAJMpmRkn" color="text-secondary" noBorder />
           </div>
 
@@ -53,7 +53,7 @@ export function CalendarPage() {
                 <div className="absolute left-0 -top-1 w-2.5 h-2.5 bg-error rounded-full"></div>
               </div>
             </div>
-            
+
             <div className="calendar-grid min-h-[1200px]">
               <div className="border-r border-surface-container-high bg-surface-container-low/30">
                 {['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00'].map(t => (
@@ -61,22 +61,22 @@ export function CalendarPage() {
                 ))}
               </div>
               <div className="relative border-r border-surface-container-high p-1">
-                <Appointment top="24px" h="68px" name="Ricardo Gómez" time="08:15" 
-                             scheme={{bg: 'bg-primary-fixed/40', border: 'border-primary', text: 'text-on-primary-fixed'}}
-                             status="Confirmed" badgeStatus="success" />
-                <Appointment top="288px" h="90px" name="Sofía Valera" time="11:00" 
-                             scheme={{bg: 'bg-primary-fixed/40', border: 'border-primary', text: 'text-on-primary-fixed'}}
-                             status="Arrived" badgeStatus="processing" />
+                <Appointment top="24px" h="68px" name="Ricardo Gómez" time="08:15"
+                  scheme={{ bg: 'bg-primary-fixed/40', border: 'border-primary', text: 'text-on-primary-fixed' }}
+                  status="Confirmed" badgeStatus="success" />
+                <Appointment top="288px" h="90px" name="Sofía Valera" time="11:00"
+                  scheme={{ bg: 'bg-primary-fixed/40', border: 'border-primary', text: 'text-on-primary-fixed' }}
+                  status="Arrived" badgeStatus="processing" />
               </div>
               <div className="relative border-r border-surface-container-high p-1 bg-surface-container-low/10">
-                <Appointment top="120px" h="90px" name="Marta Sánchez" time="09:15" 
-                             scheme={{bg: 'bg-tertiary-fixed/40', border: 'border-tertiary', text: 'text-on-tertiary-fixed'}}
-                             status="Confirmed" badgeStatus="success" />
+                <Appointment top="120px" h="90px" name="Marta Sánchez" time="09:15"
+                  scheme={{ bg: 'bg-tertiary-fixed/40', border: 'border-tertiary', text: 'text-on-tertiary-fixed' }}
+                  status="Confirmed" badgeStatus="success" />
               </div>
               <div className="relative p-1">
-                <Appointment top="48px" h="140px" name="Ignacio López" time="08:30" 
-                             scheme={{bg: 'bg-secondary-fixed/40', border: 'border-secondary', text: 'text-on-secondary-fixed'}}
-                             status="Canceled" badgeStatus="error" tx="Rehab. Post-quirúrgica de rodilla (Sesión 4/12)" />
+                <Appointment top="48px" h="140px" name="Ignacio López" time="08:30"
+                  scheme={{ bg: 'bg-secondary-fixed/40', border: 'border-secondary', text: 'text-on-secondary-fixed' }}
+                  status="Canceled" badgeStatus="error" tx="Rehab. Post-quirúrgica de rodilla (Sesión 4/12)" />
               </div>
             </div>
           </div>
@@ -92,11 +92,11 @@ export function CalendarPage() {
           </Card>
         </aside>
       </div>
-      
-      <Button 
-        type="primary" 
-        shape="circle" 
-        icon={<PlusOutlined />} 
+
+      <Button
+        type="primary"
+        shape="circle"
+        icon={<PlusOutlined />}
         size="large"
         className="fixed bottom-10 right-10 w-16 h-16 text-2xl shadow-2xl z-50 hover:scale-110 transition-transform flex items-center justify-center bg-gradient-to-br from-primary to-primary-container border-0"
       />
@@ -138,7 +138,7 @@ function MiniCalendar() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <p className="text-sm font-black font-headline mb-0">Mayo 2024</p>
+        <p className="text-sm font-black font-headline mb-0">Mayo 2026</p>
         <div className="flex gap-1">
           <Button type="text" shape="circle" icon={<LeftOutlined />} size="small" />
           <Button type="text" shape="circle" icon={<RightOutlined />} size="small" />
@@ -178,7 +178,7 @@ function QuickAvailability() {
           <Select defaultValue="all" className="w-full" size="large" bordered={false} style={{ backgroundColor: '#f3f4f5', borderRadius: '8px' }}>
             <Option value="all">Todos los Especialistas</Option>
             <Option value="ms">Dr. Marcos Silva</Option>
-            <Option value="lm">Dra. Lucía Méndez</Option>
+            <Option value="lm">Dra. Anny Upareja</Option>
           </Select>
         </div>
         <div className="pt-2">

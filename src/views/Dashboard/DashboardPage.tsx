@@ -1,9 +1,9 @@
 import { Card, Button, Segmented, Table, Progress, Tag } from 'antd';
-import { 
-  CalendarOutlined, 
-  DollarOutlined, 
-  CheckCircleOutlined, 
-  UserAddOutlined, 
+import {
+  CalendarOutlined,
+  DollarOutlined,
+  CheckCircleOutlined,
+  UserAddOutlined,
   SafetyCertificateOutlined,
   ArrowUpOutlined,
   ArrowDownOutlined,
@@ -28,7 +28,7 @@ export function DashboardPage() {
           />
           <div className="w-px h-6 bg-slate-200 mx-1"></div>
           <Button type="text" icon={<CalendarOutlined />} className="font-semibold text-slate-600">
-            Oct 1, 2024 - Oct 31, 2024
+            Oct 1, 2026 - Oct 31, 2026
           </Button>
         </div>
       </div>
@@ -203,7 +203,7 @@ function UpcomingRow({ time, name, doctor }: any) {
       <div className="flex-1">
         <p className="text-sm font-bold text-on-surface mb-0">{name}</p>
         <p className="text-xs text-on-surface-variant flex items-center gap-1 mb-0">
-           {doctor}
+          {doctor}
         </p>
       </div>
       <RightOutlined className="text-slate-300 group-hover:text-primary transition-colors" />

@@ -34,7 +34,7 @@ export function SideNavBar() {
           <img
             alt="Fisio Élite Clinic Logo"
             className="w-full h-full object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtlbuGsQ1Dw_koUrhlMkM2WUF5FfcaVhMmFNgHGVBEr2WP_wDR5O3Y1lTGH3z7UXfvf2b3pLU_-TUGLkCP1FluzWOkLrjciCmtdAZ1WuxjlvXLXodmC90BuUiW-5yMxCCtWzXO8kLHW0quiKOgFgOsilSau_Rchcp7HSqnxJ3y6ML9-WiDZWa1pOLsFexHcv1ZTcxgVlLf0_yOrIUlTkZna_mjSRz_B2VBIYynO9zlHc0kr4el7CvW_UyRJF6XDyF53McpLgkLolJz"
+            src="/logo.png"
           />
         </div>
         <div>
