@@ -200,7 +200,7 @@ function BookingSummary() {
           size="large"
           className="w-full bg-gradient-to-br from-primary to-primary-container h-12 rounded-xl font-bold border-0 shadow-lg"
           icon={<RightOutlined />}
-          iconPosition="end"
+          iconPlacement="end"
         >
           Confirmar Reserva
         </Button>

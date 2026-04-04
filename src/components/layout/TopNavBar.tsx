@@ -1,5 +1,6 @@
 import { Layout, Input, Button, Badge } from 'antd';
 import { SearchOutlined, BellOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
+import { UserMenu } from './UserMenu';
 
 const { Header } = Layout;
 
@@ -16,13 +17,13 @@ export function TopNavBar() {
           className="bg-surface-container-high/50 border-none rounded-lg py-2 hover:bg-surface-container-high focus:bg-white"
         />
       </div>
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-4">
-          <Badge dot status="error" offset={[-4, 4]}>
-            <Button type="text" shape="circle" icon={<BellOutlined className="text-lg text-slate-500" />} />
-          </Badge>
-          <Button type="text" shape="circle" icon={<SettingOutlined className="text-lg text-slate-500" />} />
-        </div>
+
+      <div className="flex items-center gap-4">
+        <Badge dot status="error" offset={[-4, 4]}>
+          <Button type="text" shape="circle" icon={<BellOutlined className="text-lg text-slate-500" />} />
+        </Badge>
+        <Button type="text" shape="circle" icon={<SettingOutlined className="text-lg text-slate-500" />} />
+
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -31,6 +32,10 @@ export function TopNavBar() {
         >
           New Appointment
         </Button>
+
+        <div className="w-px h-6 bg-slate-200" />
+
+        <UserMenu variant="topbar" name="Dr. Elena V." email="elena@fisioelite.com" />
       </div>
     </Header>
   );

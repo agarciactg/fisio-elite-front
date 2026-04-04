@@ -1,47 +1,99 @@
-/**
- * Simulated API Service Layer
- * In a real application, Axios or Fetch would be used here to connect to the backend context.
- */
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// export const API_BASE_URL = 'https://api.fisioelite.com/v1';
+export function getToken(): string | null {
+  return localStorage.getItem('fisio_token') ?? sessionStorage.getItem('fisio_token');
+}
+
+export function clearToken() {
+  localStorage.removeItem('fisio_token');
+  sessionStorage.removeItem('fisio_token');
+}
+
+function authHeaders(): HeadersInit {
+  const token = getToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
+async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers: { ...authHeaders(), ...options?.headers },
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error?.detail ?? `Error ${response.status}: ${response.statusText}`);
+  }
+
+  return response.json() as Promise<T>;
+}
 
 export const fisioEliteApiService = {
-  /**
-   * Fetches the dashboard administrative data
-   */
-  async getDashboardStats() {
-    // Simulated fetch
-    // const response = await fetch(`${API_BASE_URL}/admin/finance-stats`);
-    // return response.json();
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({
-          revenue: '€42,850.00',
-          appointmentsCompleted: 1284,
-          newPatients: 156,
-          attendanceRatio: 94.8
-        });
-      }, 500);
+
+  async login(email: string, password: string): Promise<{ access_token: string; token_type: string }> {
+    const body = new URLSearchParams({
+      grant_type: 'password',
+      username: email,
+      password,
+      scope: '',
+      client_id: '',
+      client_secret: '',
+    });
+
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error?.detail ?? `Error ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
+  },
+
+  async register(email: string, password: string, name: string): Promise<unknown> {
+    return apiFetch('/api/v1/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ email, password, name }),
     });
   },
 
-  /**
-   * Retrieves available therapists for booking
-   */
-  async getTherapists(_specialtyId?: string) {
-    // const response = await fetch(`${API_BASE_URL}/therapists${specialtyId ? `?specialty=${specialtyId}` : ''}`);
-    return Promise.resolve([
-      { id: '1', name: 'Dr. Marcos Silva', specialty: 'Deporte' },
-      { id: '2', name: 'Dra. Anny Upareja', specialty: 'Osteopatía' }
-    ]);
+  async getDashboardStats(): Promise<unknown> {
+    return apiFetch('/api/v1/dashboard/stats');
   },
 
-  /**
-   * Creates a new booking appointment
-   */
-  async createAppointment(appointmentData: any) {
-    // return await axios.post(`${API_BASE_URL}/appointments`, appointmentData);
-    console.log('Sending appointment to server:', appointmentData);
-    return Promise.resolve({ success: true, bookingId: 'BOOK-' + Math.floor(Math.random() * 1000) });
-  }
+  async getTherapists(specialtyId?: string): Promise<{ id: string; name: string; specialty: string }[]> {
+    const qs = specialtyId ? `?specialty=${specialtyId}` : '';
+    return apiFetch(`/api/v1/therapists/${qs}`);
+  },
+
+  async getAppointments(): Promise<unknown[]> {
+    return apiFetch('/api/v1/appointments/');
+  },
+
+  async createAppointment(data: Record<string, unknown>): Promise<{ success: boolean; id: string }> {
+    return apiFetch('/api/v1/appointments/', { method: 'POST', body: JSON.stringify(data) });
+  },
+
+  async getPatients(): Promise<unknown[]> {
+    return apiFetch('/api/v1/patients/');
+  },
+
+  async createPatient(data: Record<string, unknown>): Promise<unknown> {
+    return apiFetch('/api/v1/patients/', { method: 'POST', body: JSON.stringify(data) });
+  },
+
+  async getPayments(): Promise<unknown[]> {
+    return apiFetch('/api/v1/payments/');
+  },
+
+  async createPayment(data: Record<string, unknown>): Promise<unknown> {
+    return apiFetch('/api/v1/payments/', { method: 'POST', body: JSON.stringify(data) });
+  },
 };

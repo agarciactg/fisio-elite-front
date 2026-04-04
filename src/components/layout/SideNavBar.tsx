@@ -8,6 +8,7 @@ import {
   DollarOutlined,
   LineChartOutlined
 } from '@ant-design/icons';
+import { UserMenu } from './UserMenu';
 
 const { Sider } = Layout;
 
@@ -31,39 +32,23 @@ export function SideNavBar() {
     >
       <div className="px-6 mb-10 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
-          <img
-            alt="Fisio Élite Clinic Logo"
-            className="w-full h-full object-cover"
-            src="/logo.png"
-          />
+          <img alt="Fisio Élite Clinic Logo" className="w-full h-full object-cover" src="/logo.png" />
         </div>
         <div>
           <h1 className="text-xl font-bold tracking-tighter text-teal-800 dark:text-teal-300 font-headline mb-0">Fisio Élite</h1>
           <p className="text-[10px] uppercase tracking-widest text-slate-500 font-label mb-0">Clinical Atelier</p>
         </div>
       </div>
-      
+
       <Menu
         mode="inline"
         selectedKeys={[location.pathname]}
         items={menuItems}
         className="border-r-0 bg-transparent px-2 font-headline font-semibold text-slate-500"
       />
-      
-      <div className="absolute bottom-6 left-0 w-full px-6 pt-6 border-t border-slate-100/50">
-        <div className="flex items-center gap-3 mb-0">
-          <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden shrink-0">
-            <img
-              alt="Doctor profile"
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQiXCGY_Tu9gNbMAGjURNTT0q4KadC6Ne-C38V1xkI1-B2lVIu3fvx-DbMGCg6TbDDNJ6SCre_sR0Z9-6eIqXVUg-2ucefr0uFxejJlpsgyemu4icraoX0-ArmPlqkgP7DZjnBeMZG7l4JMUQz7NCcmCW5RFFOccMTJNzi6zVsQ0zksGMUqcf9NkZXKk4oAEqyPs8KzoqAfVL9XScpUJLbt3KgLeSvmPD1aodOuAWqakmF5Ck9sGrZ7ipFoaVybmmx4qbkV0Th5qTa"
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold truncate text-on-surface mb-0">Dr. Elena V.</p>
-            <p className="text-xs text-slate-500 truncate mb-0">Clinical Director</p>
-          </div>
-        </div>
+
+      <div className="absolute bottom-6 left-0 w-full px-4 pt-4 border-t border-slate-100/50">
+        <UserMenu variant="sidebar" name="Dr. Elena V." email="elena@fisioelite.com" />
       </div>
     </Sider>
   );
