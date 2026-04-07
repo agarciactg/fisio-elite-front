@@ -1,3 +1,21 @@
+export interface Patient {
+  id: number;
+  first_name: string;
+  last_name: string;
+  document_number?: string;
+  phone_number?: string;
+}
+
+export interface Therapist {
+  id: number;
+  first_name: string;
+  last_name: string;
+  specialty: string;
+  document_number?: string;
+  email?: string;
+  is_active: boolean;
+}
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export function getToken(): string | null {
@@ -57,10 +75,10 @@ export const fisioEliteApiService = {
     return response.json();
   },
 
-  async register(email: string, password: string, name: string): Promise<unknown> {
+  async register(email: string, password: string, name: string, document_number: string): Promise<unknown> {
     return apiFetch('/api/v1/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify({ email, password, name, document_number }),
     });
   },
 
@@ -68,7 +86,7 @@ export const fisioEliteApiService = {
     return apiFetch('/api/v1/dashboard/stats');
   },
 
-  async getTherapists(specialtyId?: string): Promise<{ id: string; name: string; specialty: string }[]> {
+  async getTherapists(specialtyId?: string): Promise<Therapist[]> {
     const qs = specialtyId ? `?specialty=${specialtyId}` : '';
     return apiFetch(`/api/v1/therapists/${qs}`);
   },
@@ -81,7 +99,7 @@ export const fisioEliteApiService = {
     return apiFetch('/api/v1/appointments/', { method: 'POST', body: JSON.stringify(data) });
   },
 
-  async getPatients(): Promise<unknown[]> {
+  async getPatients(): Promise<Patient[]> {
     return apiFetch('/api/v1/patients/');
   },
 

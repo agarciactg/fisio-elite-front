@@ -6,10 +6,14 @@ import {
   LeftOutlined,
   RightOutlined
 } from '@ant-design/icons';
+import { useState } from 'react';
+import NewAppointmentModal from '../Dashboard/NewAppointmentModal';
 
 const { Option } = Select;
 
 export function CalendarPage() {
+  const [openNewAppointment, setOpenNewAppointment] = useState(false)
+
   return (
     <>
       {/* Header & View Toggles */}
@@ -27,7 +31,7 @@ export function CalendarPage() {
           <Button icon={<FilterOutlined />} size="large" className="bg-surface-container-lowest text-on-surface-variant font-bold border-0 rounded-xl hover:bg-teal-50">
             Filtrar
           </Button>
-          <Button type="primary" icon={<PlusOutlined />} size="large" className="bg-gradient-to-br from-primary to-primary-container px-6 border-0 rounded-xl shadow-lg shadow-primary/20 font-bold">
+          <Button onClick={() => setOpenNewAppointment(true)} type="primary" icon={<PlusOutlined />} size="large" className="bg-gradient-to-br from-primary to-primary-container px-6 border-0 rounded-xl shadow-lg shadow-primary/20 font-bold">
             Agendar Nueva Cita
           </Button>
         </div>
@@ -99,6 +103,11 @@ export function CalendarPage() {
         icon={<PlusOutlined />}
         size="large"
         className="fixed bottom-10 right-10 w-16 h-16 text-2xl shadow-2xl z-50 hover:scale-110 transition-transform flex items-center justify-center bg-gradient-to-br from-primary to-primary-container border-0"
+      />
+
+      <NewAppointmentModal
+        open={openNewAppointment}
+        onClose={() => setOpenNewAppointment(false)}
       />
     </>
   );

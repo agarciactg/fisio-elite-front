@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Button, Segmented, Table, Progress, Tag, Skeleton } from 'antd';
+import { Card, Button, Segmented, Table, Progress, Tag, Skeleton, Modal, Descriptions, Space } from 'antd';
 import {
   CalendarOutlined,
   DollarOutlined,
@@ -11,8 +11,15 @@ import {
   PlusCircleOutlined,
   WalletOutlined,
   RightOutlined,
+  PhoneOutlined,
+  ClockCircleOutlined,
+  UserOutlined,
+  MedicineBoxOutlined,
 } from '@ant-design/icons';
 import { fisioEliteApiService } from '../../services/api';
+import NewAppointmentModal from './NewAppointmentModal';
+import NewPaymentModal from './NewPaymentModal';
+import NewPatientModal from './NewPatient';
 
 interface RecentActivityItem {
   patient_name: string;
@@ -30,9 +37,14 @@ interface WeeklyAppointment {
 }
 
 interface UpcomingAppointment {
+  id: number;
   time: string;
   patient_name: string;
+  patient_id: number;
+  patient_phone: string;
   therapist: string;
+  treatment: string;
+  status: string;
 }
 
 interface TherapistStat {
@@ -266,25 +278,49 @@ function RecentActivityWidget({ data, loading }: { data: RecentActivityItem[]; l
 }
 
 function QuickActionsWidget() {
+  const [openNewAppointment, setOpenNewAppointment] = useState(false);
+  const [openNewPayment, setOpenNewPayment] = useState(false);
+  const [openNewPatient, setOpenNewPatient] = useState(false);
+
   return (
     <Card bordered={false} className="shadow-sm rounded-xl">
       <h4 className="text-lg font-bold font-headline text-on-surface mb-6 tracking-tight">Acciones Rápidas</h4>
       <div className="grid grid-cols-1 gap-3">
-        <Button type="primary" size="large" icon={<PlusCircleOutlined />} className="h-auto py-4 rounded-xl font-bold flex items-center justify-start text-left text-base shadow-sm">
+        <Button type="primary" onClick={() => setOpenNewAppointment(true)} size="large" icon={<PlusCircleOutlined />} className="h-auto py-4 rounded-xl font-bold flex items-center justify-start text-left text-base shadow-sm">
           Nueva Cita
         </Button>
-        <Button size="large" icon={<WalletOutlined />} className="h-auto py-4 rounded-xl font-bold flex items-center justify-start text-left text-base bg-secondary-container text-on-secondary-container border-0 hover:brightness-105">
+        <Button size="large" onClick={() => setOpenNewPayment(true)} icon={<WalletOutlined />} className="h-auto py-4 rounded-xl font-bold flex items-center justify-start text-left text-base bg-secondary-container text-on-secondary-container border-0 hover:brightness-105">
           Registrar Pago
         </Button>
-        <Button size="large" icon={<UserAddOutlined />} className="h-auto py-4 rounded-xl font-bold flex items-center justify-start text-left text-base bg-surface-container-high border-0">
+        <Button size="large" onClick={() => setOpenNewPatient(true)} icon={<UserAddOutlined />} className="h-auto py-4 rounded-xl font-bold flex items-center justify-start text-left text-base bg-surface-container-high border-0">
           Nuevo Paciente
         </Button>
       </div>
+      <NewAppointmentModal
+        open={openNewAppointment}
+        onClose={() => setOpenNewAppointment(false)}
+      />
+      <NewPaymentModal
+        open={openNewPayment}
+        onClose={() => setOpenNewPayment(false)}
+      />
+      <NewPatientModal
+        open={openNewPatient}
+        onClose={() => setOpenNewPatient(false)}
+      />
     </Card>
   );
 }
 
 function UpcomingWidget({ data, loading }: { data: UpcomingAppointment[]; loading: boolean }) {
+  const [selectedAppt, setSelectedAppt] = useState<UpcomingAppointment | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleRowClick = (appt: UpcomingAppointment) => {
+    setSelectedAppt(appt);
+    setIsModalOpen(true);
+  };
+
   return (
     <Card bordered={false} className="shadow-sm rounded-xl">
       <div className="flex justify-between items-center mb-6">
@@ -297,24 +333,129 @@ function UpcomingWidget({ data, loading }: { data: UpcomingAppointment[]; loadin
         ) : (
           <div className="space-y-4">
             {data.map((appt, i) => (
-              <UpcomingRow key={i} time={appt.time} name={appt.patient_name} doctor={appt.therapist} />
+              <UpcomingRow
+                key={i}
+                time={appt.time}
+                name={appt.patient_name}
+                doctor={appt.therapist}
+                treatment={appt.treatment}
+                onClick={() => handleRowClick(appt)}
+              />
             ))}
           </div>
         )}
       </Skeleton>
+
+      <AppointmentDetailModal
+        appointment={selectedAppt}
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Card>
   );
 }
 
-function UpcomingRow({ time, name, doctor }: { time: string; name: string; doctor: string }) {
+function AppointmentDetailModal({
+  appointment,
+  open,
+  onClose
+}: {
+  appointment: UpcomingAppointment | null;
+  open: boolean;
+  onClose: () => void;
+}) {
+  if (!appointment) return null;
+
   return (
-    <div className="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors cursor-pointer group border border-transparent hover:border-slate-200">
-      <div className="flex flex-col items-center justify-center w-14 h-14 bg-teal-50 text-teal-700 rounded-xl font-headline font-black">
+    <Modal
+      title={
+        <div className="flex items-center gap-2 text-xl font-bold font-headline pt-2">
+          <CalendarOutlined className="text-primary" />
+          <span>Detalle de la Cita</span>
+        </div>
+      }
+      open={open}
+      onCancel={onClose}
+      footer={[
+        <Button key="close" onClick={onClose} className="rounded-lg font-bold">
+          Cerrar
+        </Button>,
+        <Button key="view-record" type="primary" onClick={onClose} className="rounded-lg font-bold bg-primary border-0">
+          Ver Ficha del Paciente
+        </Button>
+      ]}
+      centered
+      width={500}
+      className="p-2"
+    >
+      <div className="py-4">
+        <div className="bg-surface-container-low p-6 rounded-2xl border border-slate-100 mb-6">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-black">
+              {appointment.patient_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <h3 className="text-2xl font-black text-on-surface mb-0 tracking-tight">{appointment.patient_name}</h3>
+              <p className="text-sm text-on-surface-variant flex items-center gap-1.5 mb-0 font-medium">
+                <PhoneOutlined /> {appointment.patient_phone}
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex gap-3">
+             <Tag color="processing" className="font-bold border-0 px-3 py-0.5 rounded-full uppercase text-[10px] tracking-wider">
+               {appointment.status}
+             </Tag>
+             <Tag color="cyan" className="font-bold border-0 px-3 py-0.5 rounded-full uppercase text-[10px] tracking-wider">
+               Presencial
+             </Tag>
+          </div>
+        </div>
+
+        <Descriptions column={1} className="px-2">
+          <Descriptions.Item label={<Space><ClockCircleOutlined /> <span className="font-bold">Hora</span></Space>}>
+            <span className="font-medium">{appointment.time} — Hoy</span>
+          </Descriptions.Item>
+          <Descriptions.Item label={<Space><UserOutlined /> <span className="font-bold">Profesional</span></Space>}>
+            <span className="font-medium text-primary uppercase font-bold text-xs tracking-wide">{appointment.therapist}</span>
+          </Descriptions.Item>
+          <Descriptions.Item label={<Space><MedicineBoxOutlined /> <span className="font-bold">Tratamiento</span></Space>}>
+            <span className="font-bold text-on-surface">{appointment.treatment}</span>
+          </Descriptions.Item>
+        </Descriptions>
+      </div>
+    </Modal>
+  );
+}
+
+function UpcomingRow({
+  time,
+  name,
+  doctor,
+  treatment,
+  onClick
+}: {
+  time: string;
+  name: string;
+  doctor: string;
+  treatment: string;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      onClick={onClick}
+      className="flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container transition-colors cursor-pointer group border border-transparent hover:border-slate-200"
+    >
+      <div className="flex flex-col items-center justify-center min-w-[56px] h-14 bg-teal-50 text-teal-700 rounded-xl font-headline font-black">
         <span className="text-sm">{time}</span>
       </div>
-      <div className="flex-1">
-        <p className="text-sm font-bold text-on-surface mb-0">{name}</p>
-        <p className="text-xs text-on-surface-variant mb-0">{doctor}</p>
+      <div className="flex-1 overflow-hidden">
+        <p className="text-sm font-bold text-on-surface mb-0 truncate">{name}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-[11px] font-bold text-primary uppercase tracking-tighter mb-0">{doctor}</p>
+          <span className="text-slate-300 text-[10px]">•</span>
+          <p className="text-[11px] text-on-surface-variant font-medium mb-0 truncate">{treatment}</p>
+        </div>
       </div>
       <RightOutlined className="text-slate-300 group-hover:text-primary transition-colors" />
     </div>
