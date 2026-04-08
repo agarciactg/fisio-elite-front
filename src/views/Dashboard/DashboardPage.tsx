@@ -19,7 +19,7 @@ import {
 import { fisioEliteApiService } from '../../services/api';
 import NewAppointmentModal from './NewAppointmentModal';
 import NewPaymentModal from './NewPaymentModal';
-import NewPatientModal from './NewPatient';
+import NewPatientModal from './NewPatientModal';
 
 interface RecentActivityItem {
   patient_name: string;
