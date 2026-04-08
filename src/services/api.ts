@@ -99,6 +99,22 @@ export const fisioEliteApiService = {
     return apiFetch('/api/v1/appointments/', { method: 'POST', body: JSON.stringify(data) });
   },
 
+  async getAppointmentsByDay(date: string, therapistId?: number): Promise<any[]> {
+    const qs = new URLSearchParams({ date });
+    if (therapistId) qs.set('therapist_id', String(therapistId));
+    return apiFetch(`/api/v1/appointments/by-day?${qs}`);
+  },
+  async getAppointmentsByWeek(date: string, therapistId?: number): Promise<any[]> {
+    const qs = new URLSearchParams({ date });
+    if (therapistId) qs.set('therapist_id', String(therapistId));
+    return apiFetch(`/api/v1/appointments/by-week?${qs}`);
+  },
+  async getAppointmentsByMonth(year: number, month: number, therapistId?: number): Promise<any[]> {
+    const qs = new URLSearchParams({ year: String(year), month: String(month) });
+    if (therapistId) qs.set('therapist_id', String(therapistId));
+    return apiFetch(`/api/v1/appointments/by-month?${qs}`);
+  },
+
   async getPatients(): Promise<Patient[]> {
     return apiFetch('/api/v1/patients/');
   },
