@@ -1,28 +1,29 @@
 import { useEffect, useRef } from 'react';
-import { Skeleton } from 'antd';
+import { Skeleton, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
-import { Appointment } from '../components/Appointment';
 
 const HOUR_HEIGHT = 64;
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
-function timeToTop(datetime: string): number {
-  const d = dayjs(datetime);
-  return d.hour() * HOUR_HEIGHT + (d.minute() / 60) * HOUR_HEIGHT;
-}
-function durationToHeight(start: string, end: string): number {
-  return Math.max((dayjs(end).diff(dayjs(start), 'minute') / 60) * HOUR_HEIGHT, 32);
-}
+function timeToTop(dt: string) { const d = dayjs(dt); return d.hour() * HOUR_HEIGHT + (d.minute() / 60) * HOUR_HEIGHT; }
+function durationToHeight(s: string, e: string) { return Math.max((dayjs(e).diff(dayjs(s), 'minute') / 60) * HOUR_HEIGHT, 40); }
 function getScheme(status: string) {
   switch (status) {
-    case 'Confirmed': return { bg: 'bg-teal-100', border: 'border-teal-600', text: 'text-teal-900' };
-    case 'Arrived': return { bg: 'bg-cyan-100', border: 'border-cyan-600', text: 'text-cyan-900' };
-    case 'Canceled': return { bg: 'bg-red-100', border: 'border-red-600', text: 'text-red-900' };
-    default: return { bg: 'bg-gray-100', border: 'border-gray-400', text: 'text-gray-800' };
+    case 'Confirmed': return { bg: 'bg-teal-100', border: 'border-l-teal-600', text: 'text-teal-900' };
+    case 'Arrived': return { bg: 'bg-cyan-100', border: 'border-l-cyan-600', text: 'text-cyan-900' };
+    case 'Canceled': return { bg: 'bg-red-100', border: 'border-l-red-600', text: 'text-red-900', opacity: 'opacity-60' };
+    default: return { bg: 'bg-gray-100', border: 'border-l-gray-400', text: 'text-gray-800' };
   }
 }
 
-export function WeekView({ date, appointments = [], loading = false }: { date: Dayjs; appointments?: any[]; loading?: boolean }) {
+interface WeekViewProps {
+  date: Dayjs;
+  appointments?: any[];
+  loading?: boolean;
+  onAppointmentClick?: (appointment: any) => void;
+}
+
+export function WeekView({ date, appointments = [], loading = false, onAppointmentClick }: WeekViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const now = dayjs();
   const startOfWeek = date.startOf('week');
@@ -30,9 +31,8 @@ export function WeekView({ date, appointments = [], loading = false }: { date: D
   const nowTop = now.hour() * HOUR_HEIGHT + (now.minute() / 60) * HOUR_HEIGHT;
 
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current)
       scrollRef.current.scrollTop = Math.max((now.hour() - 1) * HOUR_HEIGHT - 32, 0);
-    }
   }, [date]);
 
   return (
@@ -58,6 +58,7 @@ export function WeekView({ date, appointments = [], loading = false }: { date: D
       <div ref={scrollRef} className="flex-1 overflow-y-auto">
         <Skeleton loading={loading} active paragraph={{ rows: 8 }} className="p-4">
           <div style={{ display: 'grid', gridTemplateColumns: '80px repeat(7, 1fr)', minHeight: `${HOUR_HEIGHT * 24}px` }}>
+
             <div className="border-r border-surface-container-high bg-surface-container-low/30">
               {HOURS.map(h => (
                 <div key={h} className="border-b border-slate-100 flex items-start justify-end pr-3 pt-1" style={{ height: HOUR_HEIGHT }}>
@@ -78,17 +79,22 @@ export function WeekView({ date, appointments = [], loading = false }: { date: D
                       <div className="flex-1 h-px bg-red-400/60" />
                     </div>
                   )}
-                  {dayAppts.map(a => (
-                    <Appointment key={a.id}
-                      top={`${timeToTop(a.start_time)}px`}
-                      h={`${durationToHeight(a.start_time, a.end_time)}px`}
-                      name={`${a.patient.first_name} ${a.patient.last_name}`}
-                      time={dayjs(a.start_time).format('HH:mm')}
-                      status={a.status} tx={a.treatment}
-                      badgeStatus={a.status === 'Confirmed' ? 'success' : a.status === 'Arrived' ? 'processing' : 'error'}
-                      scheme={getScheme(a.status)}
-                    />
-                  ))}
+                  {dayAppts.map(a => {
+                    const s = getScheme(a.status);
+                    const name = a.patient ? `${a.patient.first_name} ${a.patient.last_name}` : '—';
+                    return (
+                      <Tooltip key={a.id} title={`${name} · ${dayjs(a.start_time).format('HH:mm')}`}>
+                        <div
+                          onClick={() => onAppointmentClick?.(a)}
+                          className={`absolute left-0.5 right-0.5 ${s.bg} border-l-4 ${s.border} ${s.opacity ?? ''} rounded-md p-1.5 cursor-pointer hover:brightness-95 transition-all z-10`}
+                          style={{ top: timeToTop(a.start_time), height: durationToHeight(a.start_time, a.end_time) }}
+                        >
+                          <p className={`text-[10px] font-black ${s.text} truncate mb-0 leading-tight`}>{name}</p>
+                          <p className={`text-[9px] ${s.text} opacity-70 mb-0`}>{dayjs(a.start_time).format('HH:mm')}</p>
+                        </div>
+                      </Tooltip>
+                    );
+                  })}
                 </div>
               );
             })}

@@ -1,6 +1,6 @@
 import { Card, Button, Select } from 'antd';
 import { FilterOutlined, PlusOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/es';
 import weekday from 'dayjs/plugin/weekday';
@@ -10,13 +10,13 @@ import { DayView } from './views/DayView';
 import { WeekView } from './views/WeekView';
 import { MonthView } from './views/MonthView';
 import { fisioEliteApiService } from '../../services/api';
+import { AppointmentDetailDrawer } from './components/AppointmentDetailDrawer';
 
 dayjs.extend(weekday);
 dayjs.extend(isSameOrBefore);
 dayjs.locale('es');
 
 const { Option } = Select;
-
 type ViewType = 'day' | 'week' | 'month';
 
 function getLabel(view: ViewType, date: Dayjs): string {
@@ -29,7 +29,6 @@ function getLabel(view: ViewType, date: Dayjs): string {
   }
   return date.format('MMMM YYYY');
 }
-
 function shift(view: ViewType, date: Dayjs, dir: 1 | -1): Dayjs {
   return date.add(dir, view === 'day' ? 'day' : view === 'week' ? 'week' : 'month');
 }
@@ -41,12 +40,20 @@ export function CalendarPage() {
   const [therapists, setTherapists] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedAppt, setSelectedAppt] = useState<any | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // ── Carga terapeutas una sola vez ─────────────────────────────────────────
+  const triggerRefresh = useCallback(() => setRefreshKey(k => k + 1), []);
+
+  const handleAppointmentClick = useCallback((appt: any) => {
+    setSelectedAppt(appt);
+    setDrawerOpen(true);
+  }, []);
+
   useEffect(() => {
-    fisioEliteApiService.getTherapists().then(data => {
-      // Enriquecer con avatar placeholder
-      setTherapists(data.map((t: any) => ({
+    fisioEliteApiService.getTherapists().then((data: any[]) => {
+      setTherapists(data.map(t => ({
         ...t,
         name: `${t.first_name} ${t.last_name}`,
         avatar: `https://i.pravatar.cc/150?u=${t.id}`,
@@ -56,7 +63,7 @@ export function CalendarPage() {
 
   useEffect(() => {
     setLoading(true);
-    let promise: Promise<any>;
+    let promise: Promise<any[]>;
 
     if (view === 'day') {
       promise = fisioEliteApiService.getAppointmentsByDay(currentDate.format('YYYY-MM-DD'));
@@ -70,13 +77,15 @@ export function CalendarPage() {
       .then(data => setAppointments(data))
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [view, currentDate]);
+  }, [view, currentDate, refreshKey]);
 
-  const isCurrentPeriod = currentDate.isSame(dayjs(), view === 'month' ? 'month' : view === 'week' ? 'week' : 'day');
+  const isCurrentPeriod = currentDate.isSame(
+    dayjs(),
+    view === 'month' ? 'month' : view === 'week' ? 'week' : 'day'
+  );
 
   return (
     <>
-      {/* Header */}
       <div className="flex justify-between items-end mb-6 gap-4 flex-wrap">
         <div>
           <h2 className="text-3xl font-black font-headline tracking-tight text-on-surface mb-0">
@@ -128,9 +137,31 @@ export function CalendarPage() {
         <Card bordered={false}
           className="flex-1 rounded-3xl shadow-sm overflow-hidden flex flex-col"
           bodyStyle={{ padding: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
-          {view === 'day' && <DayView date={currentDate} doctors={therapists} appointments={appointments} loading={loading} />}
-          {view === 'week' && <WeekView date={currentDate} appointments={appointments} loading={loading} />}
-          {view === 'month' && <MonthView date={currentDate} appointments={appointments} loading={loading} />}
+          {view === 'day' && (
+            <DayView
+              date={currentDate}
+              doctors={therapists}
+              appointments={appointments}
+              loading={loading}
+              onAppointmentClick={handleAppointmentClick}
+            />
+          )}
+          {view === 'week' && (
+            <WeekView
+              date={currentDate}
+              appointments={appointments}
+              loading={loading}
+              onAppointmentClick={handleAppointmentClick}
+            />
+          )}
+          {view === 'month' && (
+            <MonthView
+              date={currentDate}
+              appointments={appointments}
+              loading={loading}
+              onAppointmentClick={handleAppointmentClick}
+            />
+          )}
         </Card>
 
         <aside className="w-80 flex flex-col gap-6">
@@ -147,8 +178,17 @@ export function CalendarPage() {
       <Button type="primary" shape="circle" icon={<PlusOutlined />} size="large"
         onClick={() => setOpenModal(true)}
         className="fixed bottom-10 right-10 w-16 h-16 text-2xl shadow-2xl z-50 hover:scale-110 transition-transform flex items-center justify-center bg-gradient-to-br from-primary to-primary-container border-0" />
+      <NewAppointmentModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        onCreated={triggerRefresh}
+      />
 
-      <NewAppointmentModal open={openModal} onClose={() => setOpenModal(false)} />
+      <AppointmentDetailDrawer
+        appointment={selectedAppt}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
     </>
   );
 }
@@ -197,9 +237,7 @@ function QuickAvailability({ therapists }: { therapists: any[] }) {
       <h3 className="text-sm font-black font-headline mb-4">Disponibilidad Rápida</h3>
       <div className="space-y-4 flex-1">
         <div>
-          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">
-            Seleccionar Especialista
-          </label>
+          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 block">Seleccionar Especialista</label>
           <Select defaultValue="all" className="w-full" size="large" bordered={false}
             style={{ backgroundColor: '#f3f4f5', borderRadius: '8px' }}>
             <Option value="all">Todos los Especialistas</Option>

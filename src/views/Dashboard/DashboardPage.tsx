@@ -401,14 +401,14 @@ function AppointmentDetailModal({
               </p>
             </div>
           </div>
-          
+
           <div className="flex gap-3">
-             <Tag color="processing" className="font-bold border-0 px-3 py-0.5 rounded-full uppercase text-[10px] tracking-wider">
-               {appointment.status}
-             </Tag>
-             <Tag color="cyan" className="font-bold border-0 px-3 py-0.5 rounded-full uppercase text-[10px] tracking-wider">
-               Presencial
-             </Tag>
+            <Tag color="processing" className="font-bold border-0 px-3 py-0.5 rounded-full uppercase text-[10px] tracking-wider">
+              {appointment.status}
+            </Tag>
+            <Tag color="cyan" className="font-bold border-0 px-3 py-0.5 rounded-full uppercase text-[10px] tracking-wider">
+              Presencial
+            </Tag>
           </div>
         </div>
 

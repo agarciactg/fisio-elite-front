@@ -7,9 +7,10 @@ const { RangePicker } = DatePicker;
 interface NewAppointmentModalProps {
     open: boolean;
     onClose: () => void;
+    onCreated?: () => void;
 }
 
-const NewAppointmentModal: React.FC<NewAppointmentModalProps> = ({ open, onClose }) => {
+const NewAppointmentModal: React.FC<NewAppointmentModalProps> = ({ open, onClose, onCreated }) => {
     const [loading, setLoading] = useState(false);
     const [patients, setPatients] = useState<Patient[]>([]);
     const [therapists, setTherapists] = useState<any[]>([]);
@@ -63,6 +64,7 @@ const NewAppointmentModal: React.FC<NewAppointmentModalProps> = ({ open, onClose
             message.success("Cita creada correctamente");
             form.resetFields();
             onClose();
+            onCreated?.();
         } catch (error: any) {
             message.error(error.message || "Error al crear la cita");
         } finally {

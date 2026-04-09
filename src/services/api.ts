@@ -130,4 +130,17 @@ export const fisioEliteApiService = {
   async createPayment(data: Record<string, unknown>): Promise<unknown> {
     return apiFetch('/api/v1/payments/', { method: 'POST', body: JSON.stringify(data) });
   },
+
+  async updateAppointment(id: number, data: Record<string, any>): Promise<any> {
+    return apiFetch(`/api/v1/appointments/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data)
+    });
+  },
+
+  async cancelAppointment(id: number): Promise<any> {
+    return apiFetch(`/api/v1/appointments/${id}/cancel`, {
+      method: 'POST'
+    });
+  },
 };
