@@ -3,6 +3,7 @@ import { CalendarOutlined } from '@ant-design/icons';
 import { Skeleton, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { HeaderCell } from '../components/HeaderCell';
+import { useNow } from '../../../hook/useNow';
 
 const HOUR_HEIGHT = 64;
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
@@ -28,7 +29,7 @@ interface DayViewProps {
 
 export function DayView({ date, doctors, appointments = [], loading = false, onAppointmentClick }: DayViewProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
-    const now = dayjs();
+    const now = useNow();                          // ← se actualiza cada minuto
     const isToday = date.isSame(now, 'day');
     const nowTop = now.hour() * HOUR_HEIGHT + (now.minute() / 60) * HOUR_HEIGHT;
 
@@ -55,24 +56,37 @@ export function DayView({ date, doctors, appointments = [], loading = false, onA
             <div ref={scrollRef} className="flex-1 overflow-y-auto">
                 <Skeleton loading={loading} active paragraph={{ rows: 8 }} className="p-4">
                     <div style={{ display: 'grid', gridTemplateColumns: `80px repeat(${doctors.length}, 1fr)`, minHeight: `${HOUR_HEIGHT * 24}px` }}>
+
                         <div className="border-r border-surface-container-high bg-surface-container-low/30">
                             {HOURS.map(h => (
                                 <div key={h} className="border-b border-slate-100 flex items-start justify-end pr-3 pt-1" style={{ height: HOUR_HEIGHT }}>
-                                    <span className="text-[11px] font-bold text-slate-400">{String(h).padStart(2, '0')}:00</span>
+                                    <span className={`text-[11px] font-bold transition-colors ${isToday && h === now.hour() ? 'text-red-400' : 'text-slate-400'}`}>
+                                        {String(h).padStart(2, '0')}:00
+                                    </span>
                                 </div>
                             ))}
                         </div>
+
                         {doctors.map((doc, i) => {
-                            const docAppts = appointments.filter(a => String(a.therapist?.id ?? a.therapist_id) === String(doc.id));
+                            const docAppts = appointments.filter(a =>
+                                String(a.therapist?.id ?? a.therapist_id) === String(doc.id)
+                            );
                             return (
                                 <div key={doc.id} className={`relative border-r border-surface-container-high ${i % 2 === 1 ? 'bg-slate-50/30' : ''}`}>
                                     {HOURS.map(h => <div key={h} className="border-b border-slate-100" style={{ height: HOUR_HEIGHT }} />)}
+
                                     {isToday && (
-                                        <div className="absolute left-0 right-0 flex items-center z-20 pointer-events-none" style={{ top: nowTop }}>
-                                            {i === 0 ? <><div className="w-2 h-2 bg-red-500 rounded-full shrink-0 -ml-1" /><div className="flex-1 h-px bg-red-400/60" /></>
-                                                : <div className="w-full h-px bg-red-400/20" />}
+                                        <div
+                                            className="absolute left-0 right-0 flex items-center z-20 pointer-events-none"
+                                            style={{ top: nowTop, transition: 'top 1s linear' }}
+                                        >
+                                            {i === 0
+                                                ? <><div className="w-2.5 h-2.5 bg-red-500 rounded-full shrink-0 -ml-1 shadow-sm" /><div className="flex-1 h-px bg-red-400/70" /></>
+                                                : <div className="w-full h-px bg-red-400/30" />
+                                            }
                                         </div>
                                     )}
+
                                     {docAppts.map(a => {
                                         const s = getScheme(a.status);
                                         const name = a.patient ? `${a.patient.first_name} ${a.patient.last_name}` : '—';

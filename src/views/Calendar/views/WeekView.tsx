@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Skeleton, Tooltip } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
+import { useNow } from '../../../hook/useNow';
 
 const HOUR_HEIGHT = 64;
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
@@ -25,7 +26,7 @@ interface WeekViewProps {
 
 export function WeekView({ date, appointments = [], loading = false, onAppointmentClick }: WeekViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const now = dayjs();
+  const now = useNow();                        // ← se actualiza cada minuto
   const startOfWeek = date.startOf('week');
   const days = Array.from({ length: 7 }).map((_, i) => startOfWeek.add(i, 'day'));
   const nowTop = now.hour() * HOUR_HEIGHT + (now.minute() / 60) * HOUR_HEIGHT;
@@ -62,10 +63,13 @@ export function WeekView({ date, appointments = [], loading = false, onAppointme
             <div className="border-r border-surface-container-high bg-surface-container-low/30">
               {HOURS.map(h => (
                 <div key={h} className="border-b border-slate-100 flex items-start justify-end pr-3 pt-1" style={{ height: HOUR_HEIGHT }}>
-                  <span className="text-[11px] font-bold text-slate-400">{String(h).padStart(2, '0')}:00</span>
+                  <span className={`text-[11px] font-bold transition-colors ${h === now.hour() ? 'text-red-400' : 'text-slate-400'}`}>
+                    {String(h).padStart(2, '0')}:00
+                  </span>
                 </div>
               ))}
             </div>
+
             {days.map((d, i) => {
               const isToday = d.isSame(now, 'day');
               const dateStr = d.format('YYYY-MM-DD');
@@ -73,12 +77,17 @@ export function WeekView({ date, appointments = [], loading = false, onAppointme
               return (
                 <div key={i} className={`relative border-r border-surface-container-high last:border-r-0 ${isToday ? 'bg-teal-50/20' : ''}`}>
                   {HOURS.map(h => <div key={h} className="border-b border-slate-100" style={{ height: HOUR_HEIGHT }} />)}
+
                   {isToday && (
-                    <div className="absolute left-0 right-0 flex items-center z-20 pointer-events-none" style={{ top: nowTop }}>
-                      <div className="w-2 h-2 bg-red-500 rounded-full shrink-0 -ml-1" />
-                      <div className="flex-1 h-px bg-red-400/60" />
+                    <div
+                      className="absolute left-0 right-0 flex items-center z-20 pointer-events-none"
+                      style={{ top: nowTop, transition: 'top 1s linear' }}
+                    >
+                      <div className="w-2.5 h-2.5 bg-red-500 rounded-full shrink-0 -ml-1 shadow-sm" />
+                      <div className="flex-1 h-px bg-red-400/70" />
                     </div>
                   )}
+
                   {dayAppts.map(a => {
                     const s = getScheme(a.status);
                     const name = a.patient ? `${a.patient.first_name} ${a.patient.last_name}` : '—';
