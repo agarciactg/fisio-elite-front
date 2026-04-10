@@ -143,4 +143,11 @@ export const fisioEliteApiService = {
       method: 'POST'
     });
   },
+
+  async getFreeSlots(date: string, therapistId?: number, slotMinutes = 60): Promise<{ start: string; end: string; label: string }[]> {
+    const qs = new URLSearchParams({ date, slot_minutes: String(slotMinutes) });
+    if (therapistId) qs.set('therapist_id', String(therapistId));
+    return apiFetch(`/api/v1/appointments/free-slots?${qs}`);
+  },
+
 };

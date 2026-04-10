@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import { Modal, Form, Select, DatePicker, Input, message } from "antd";
 import { fisioEliteApiService, type Patient } from "../../services/api";
 
@@ -8,9 +9,19 @@ interface NewAppointmentModalProps {
     open: boolean;
     onClose: () => void;
     onCreated?: () => void;
+    prefilledTime?: {
+        date: string;
+        start: string;
+        end: string;
+    } | null;
 }
 
-const NewAppointmentModal: React.FC<NewAppointmentModalProps> = ({ open, onClose, onCreated }) => {
+const NewAppointmentModal: React.FC<NewAppointmentModalProps> = ({
+    open,
+    onClose,
+    onCreated,
+    prefilledTime
+}) => {
     const [loading, setLoading] = useState(false);
     const [patients, setPatients] = useState<Patient[]>([]);
     const [therapists, setTherapists] = useState<any[]>([]);
@@ -27,10 +38,26 @@ const NewAppointmentModal: React.FC<NewAppointmentModalProps> = ({ open, onClose
     }));
 
     useEffect(() => {
-        if (open) {
+        if (!open) return;
+
+        if (prefilledTime) {
+            const start = dayjs(`${prefilledTime.date}T${prefilledTime.start}`);
+            const end = dayjs(`${prefilledTime.date}T${prefilledTime.end}`);
+
+            form.setFieldsValue({
+                time: [start, end],
+            });
+        } else {
+            form.setFieldsValue({ time: undefined });
+        }
+    }, [prefilledTime, open]);
+
+    useEffect(() => {
+        if (!open) {
+            form.resetFields();
             fetchData();
         }
-    }, [open]);
+    }, [open, form]);
 
     const fetchData = async () => {
         try {
