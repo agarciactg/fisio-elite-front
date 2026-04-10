@@ -107,18 +107,20 @@ export function AppointmentDetailDrawer({ appointment: a, open, onClose, onRefre
             const payload = {
                 patient_id: values.patient_id,
                 therapist_id: values.therapist_id,
-                start_time: values.time[0].toISOString(),
-                end_time: values.time[1].toISOString(),
+                start_time: values.time[0].format('YYYY-MM-DD HH:mm:ss'),
+                end_time: values.time[1].format('YYYY-MM-DD HH:mm:ss'),
                 status: values.status,
                 treatment: values.treatment,
             };
 
             await fisioEliteApiService.updateAppointment(a.id, payload);
             message.success("Cita actualizada correctamente");
-            setIsEditing(false);
             onRefresh?.();
+            setIsEditing(false);
+            onClose();
         } catch (error: any) {
-            message.error(error.message || "Error al actualizar la cita");
+            console.error(error);
+            message.error(error.response?.data?.detail || "Error al actualizar la cita");
         } finally {
             setLoading(false);
         }

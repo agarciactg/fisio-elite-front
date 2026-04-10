@@ -45,7 +45,10 @@ export function CalendarPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [prefilledTime, setPrefilledTime] = useState<{ date: string; start: string; end: string } | null>(null);
 
-  const triggerRefresh = useCallback(() => setRefreshKey(k => k + 1), []);
+  const triggerRefresh = useCallback(() => {
+    setRefreshKey(k => k + 1);
+    setSelectedAppt(null);
+  }, []);
 
   const handleAppointmentClick = useCallback((appt: any) => {
     setSelectedAppt(appt);
@@ -164,7 +167,12 @@ export function CalendarPage() {
         prefilledTime={prefilledTime}
       />
 
-      <AppointmentDetailDrawer appointment={selectedAppt} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+      <AppointmentDetailDrawer
+        appointment={selectedAppt}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onRefresh={triggerRefresh}
+      />
     </>
   );
 }

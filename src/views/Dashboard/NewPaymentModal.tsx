@@ -9,9 +9,10 @@ dayjs.locale("es");
 interface NewPaymentModalProps {
     open: boolean;
     onClose: () => void;
+    onSuccess: () => void;
 }
 
-const NewPaymentModal: React.FC<NewPaymentModalProps> = ({ open, onClose }) => {
+const NewPaymentModal: React.FC<NewPaymentModalProps> = ({ open, onClose, onSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [appointments, setAppointments] = useState<any[]>([]);
     const [form] = Form.useForm();
@@ -29,7 +30,7 @@ const NewPaymentModal: React.FC<NewPaymentModalProps> = ({ open, onClose }) => {
 
     const fetchAppointments = async () => {
         try {
-            const data = await fisioEliteApiService.getAppointments();
+            const data = await fisioEliteApiService.getAppointments(true);
             setAppointments(data);
         } catch (error) {
             message.error("Error cargando citas");
@@ -39,18 +40,16 @@ const NewPaymentModal: React.FC<NewPaymentModalProps> = ({ open, onClose }) => {
     const handleSubmit = async (values: any) => {
         try {
             setLoading(true);
-
             const payload = {
                 amount: values.amount,
                 status: values.status,
                 payment_method: values.payment_method,
                 appointment_id: values.appointment_id,
             };
-
             await fisioEliteApiService.createPayment(payload);
-
             message.success("Pago registrado correctamente 💰");
             form.resetFields();
+            onSuccess?.();
             onClose();
         } catch (error: any) {
             message.error(error.message || "Error al registrar el pago");

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Card, Button, Segmented, Table, Progress, Tag, Skeleton, Modal, Descriptions, Space } from 'antd';
 import {
   CalendarOutlined,
@@ -71,13 +71,17 @@ interface DashboardStats {
 export function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    setLoading(true);
     fisioEliteApiService.getDashboardStats()
       .then(data => setStats(data as DashboardStats))
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, []);
+  }, [refreshKey]);
+
+  const handleRefresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
   return (
     <>
@@ -132,7 +136,7 @@ export function DashboardPage() {
           <RecentActivityWidget data={stats?.recent_activity ?? []} loading={loading} />
         </div>
         <div className="col-span-12 lg:col-span-4 space-y-8">
-          <QuickActionsWidget />
+          <QuickActionsWidget onPaymentCreated={handleRefresh} />
           <UpcomingWidget data={stats?.upcoming_today ?? []} loading={loading} />
           <TherapistStatsWidget data={stats?.appointments_by_therapist ?? []} loading={loading} />
         </div>
@@ -277,7 +281,7 @@ function RecentActivityWidget({ data, loading }: { data: RecentActivityItem[]; l
   );
 }
 
-function QuickActionsWidget() {
+function QuickActionsWidget({ onPaymentCreated }: { onPaymentCreated: () => void }) {
   const [openNewAppointment, setOpenNewAppointment] = useState(false);
   const [openNewPayment, setOpenNewPayment] = useState(false);
   const [openNewPatient, setOpenNewPatient] = useState(false);
@@ -303,6 +307,7 @@ function QuickActionsWidget() {
       <NewPaymentModal
         open={openNewPayment}
         onClose={() => setOpenNewPayment(false)}
+        onSuccess={onPaymentCreated}
       />
       <NewPatientModal
         open={openNewPatient}

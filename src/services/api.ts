@@ -91,8 +91,9 @@ export const fisioEliteApiService = {
     return apiFetch(`/api/v1/therapists/${qs}`);
   },
 
-  async getAppointments(): Promise<unknown[]> {
-    return apiFetch('/api/v1/appointments/');
+  async getAppointments(unpaidOnly = false): Promise<unknown[]> {
+    const qs = unpaidOnly ? '?unpaid_only=true' : '';
+    return apiFetch(`/api/v1/appointments/${qs}`);
   },
 
   async createAppointment(data: Record<string, unknown>): Promise<{ success: boolean; id: string }> {
