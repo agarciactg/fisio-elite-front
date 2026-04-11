@@ -4,20 +4,24 @@ import { PatientLayout } from '../components/layout/PatientLayout';
 import { DashboardPage } from '../views/Dashboard/DashboardPage';
 import { CalendarPage } from '../views/Calendar/CalendarPage';
 import { BookingPage } from '../views/Booking/BookingPage';
-import { getToken } from '../services/api';
 import { LoginPage } from '../views/Login/LoginPage';
+import { getToken, type UserRole } from '../services/api';
+import { getRole } from '../helpers/token';
+
 
 function PrivateRoute() {
-  const token = getToken();
-  if (!token) return <Navigate to="/login" replace />;
-  return <Outlet />;
+  return getToken() ? <Outlet /> : <Navigate to="/login" replace />;
+}
+function PublicOnlyRoute() {
+  return getToken() ? <Navigate to="/" replace /> : <Outlet />;
 }
 
-function PublicOnlyRoute() {
-  const token = getToken();
-  if (token) return <Navigate to="/" replace />;
-  return <Outlet />;
+function RoleRoute({ allowed }: { allowed: UserRole[] }) {
+  const role = getRole();
+  if (!role) return <Navigate to="/login" replace />;
+  return allowed.includes(role) ? <Outlet /> : <Navigate to="/unauthorized" replace />;
 }
+
 
 export function AppRouter() {
   return (
@@ -33,14 +37,25 @@ export function AppRouter() {
 
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Layout />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="calendar" element={<CalendarPage />} />
+
+            <Route element={<RoleRoute allowed={['admin']} />}>
+              <Route index element={<DashboardPage />} />
+            </Route>
+
+            <Route element={<RoleRoute allowed={['admin', 'therapist']} />}>
+              <Route path="calendar" element={<CalendarPage />} />
+            </Route>
+
           </Route>
         </Route>
 
         <Route path="/booking" element={<PatientLayout />}>
           <Route index element={<BookingPage />} />
         </Route>
+        <Route
+          path="/unauthorized"
+          element={<UnauthorizedPage />}
+        />
 
         <Route
           path="*"
@@ -49,5 +64,32 @@ export function AppRouter() {
 
       </Routes>
     </BrowserRouter>
+  );
+}
+
+function UnauthorizedPage() {
+  const role = getRole();
+  const homeByRole: Record<UserRole, string> = {
+    admin: '/',
+    therapist: '/calendar',
+    patient: '/booking',
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50">
+      <div className="text-6xl">🔒</div>
+      <h1 className="text-2xl font-black text-on-surface font-headline tracking-tight">
+        Acceso denegado
+      </h1>
+      <p className="text-sm text-slate-500">No tienes permisos para ver esta página.</p>
+      {role && (
+        <a
+          href={homeByRole[role]}
+          className="text-sm font-bold text-primary underline"
+        >
+          Volver a mi área
+        </a>
+      )}
+    </div>
   );
 }

@@ -29,13 +29,22 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
         setLoading(true);
         setError(null);
         try {
-            const { access_token } = await fisioEliteApiService.login(values.email, values.password);
+            const { access_token, role } = await fisioEliteApiService.login(values.email, values.password);
+
             if (values.remember) {
                 localStorage.setItem('fisio_token', access_token);
             } else {
                 sessionStorage.setItem('fisio_token', access_token);
             }
-            onLoginSuccess?.(access_token);
+
+            const redirectByRole: Record<string, string> = {
+                admin: '/',
+                therapist: '/calendar',
+                patient: '/booking',
+            };
+
+            window.location.replace(redirectByRole[role] ?? '/');
+
         } catch (err: any) {
             setError(err.message ?? 'Error inesperado. Intenta de nuevo.');
         } finally {

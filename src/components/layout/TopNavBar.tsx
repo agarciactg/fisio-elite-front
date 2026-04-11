@@ -3,11 +3,13 @@ import { SearchOutlined, BellOutlined, SettingOutlined, PlusOutlined } from '@an
 import { UserMenu } from './UserMenu';
 import { useState } from 'react';
 import NewAppointmentModal from '../../views/Dashboard/NewAppointmentModal';
+import { getTokenInfo } from '../../helpers/token';
 
 const { Header } = Layout;
 
 export function TopNavBar() {
   const [openNewAppointment, setOpenNewAppointment] = useState(false)
+  const tokenInfo = getTokenInfo();
 
   return (
     <Header
@@ -40,7 +42,7 @@ export function TopNavBar() {
 
         <div className="w-px h-6 bg-slate-200" />
 
-        <UserMenu variant="topbar" name="Dr. Elena V." email="elena@fisioelite.com" />
+        <UserMenu variant="topbar" name={tokenInfo?.name} email={tokenInfo?.email} />
       </div>
 
       <NewAppointmentModal

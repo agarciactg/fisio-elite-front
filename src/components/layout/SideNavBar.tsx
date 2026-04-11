@@ -9,20 +9,59 @@ import {
   LineChartOutlined
 } from '@ant-design/icons';
 import { UserMenu } from './UserMenu';
+import { type UserRole } from '../../services/api';
+import { getRole, getTokenInfo } from '../../helpers/token';
 
 const { Sider } = Layout;
 
+
+const ALL_MENU_ITEMS = [
+  {
+    key: '/',
+    icon: <AppstoreOutlined />,
+    label: <Link to="/">Dashboard</Link>,
+    roles: ['admin'] as UserRole[],
+  },
+  {
+    key: '/calendar',
+    icon: <CalendarOutlined />,
+    label: <Link to="/calendar">Appointments</Link>,
+    roles: ['admin', 'therapist'] as UserRole[],
+  },
+  {
+    key: '/booking',
+    icon: <TeamOutlined />,
+    label: <Link to="/booking">Patients</Link>,
+    roles: ['admin', 'therapist', 'patient'] as UserRole[],
+  },
+  {
+    key: '/physio',
+    icon: <MedicineBoxOutlined />,
+    label: 'Physiotherapists',
+    roles: ['admin'] as UserRole[],
+  },
+  {
+    key: '/payments',
+    icon: <DollarOutlined />,
+    label: 'Payments',
+    roles: ['admin'] as UserRole[],
+  },
+  {
+    key: '/reports',
+    icon: <LineChartOutlined />,
+    label: 'Reports',
+    roles: ['admin'] as UserRole[],
+  },
+];
+
 export function SideNavBar() {
   const location = useLocation();
+  const role = getRole();
+  const tokenInfo = getTokenInfo();
 
-  const menuItems = [
-    { key: '/', icon: <AppstoreOutlined />, label: <Link to="/">Dashboard</Link> },
-    { key: '/calendar', icon: <CalendarOutlined />, label: <Link to="/calendar">Appointments</Link> },
-    { key: '/booking', icon: <TeamOutlined />, label: <Link to="/booking">Patients</Link> },
-    { key: '/physio', icon: <MedicineBoxOutlined />, label: 'Physiotherapists' },
-    { key: '/payments', icon: <DollarOutlined />, label: 'Payments' },
-    { key: '/reports', icon: <LineChartOutlined />, label: 'Reports' },
-  ];
+  const menuItems = ALL_MENU_ITEMS.filter(item =>
+    role && item.roles.includes(role)
+  );
 
   return (
     <Sider
@@ -48,7 +87,7 @@ export function SideNavBar() {
       />
 
       <div className="absolute bottom-6 left-0 w-full px-4 pt-4 border-t border-slate-100/50">
-        <UserMenu variant="sidebar" name="Dr. Elena V." email="elena@fisioelite.com" />
+        <UserMenu variant="sidebar" name={tokenInfo?.name} email={tokenInfo?.email} />
       </div>
     </Sider>
   );
