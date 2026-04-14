@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 export function getWeekDays(date: Dayjs) {
   const start = date.startOf('week');

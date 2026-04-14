@@ -20,7 +20,7 @@ interface LoginPageProps {
     onLoginSuccess?: (token: string) => void;
 }
 
-export function LoginPage({ onLoginSuccess }: LoginPageProps) {
+export function LoginPage({ onLoginSuccess: _ }: LoginPageProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [form] = Form.useForm<LoginFormValues>();
