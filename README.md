@@ -71,3 +71,14 @@ export default defineConfig([
   },
 ])
 ```
+<img width="1904" height="993" alt="Screenshot from 2026-04-14 22-39-10" src="https://github.com/user-attachments/assets/f72973ac-fdb2-4153-9a87-b9bf0d06378b" />
+<img width="1904" height="993" alt="Screenshot from 2026-04-14 22-37-14" src="https://github.com/user-attachments/assets/14b2082b-4d90-4d59-8b3b-7b20f61d4024" />
+<img width="1904" height="993" alt="Screenshot from 2026-04-14 22-37-26" src="https://github.com/user-attachments/assets/d18d7895-1aa7-45f0-a09a-acf617929783" />
+<img width="1904" height="993" alt="Screenshot from 2026-04-14 22-37-34" src="https://github.com/user-attachments/assets/b2fb6fd3-92c6-447f-b4aa-3f92b6f5a017" />
+<img width="1904" height="993" alt="Screenshot from 2026-04-14 22-37-50" src="https://github.com/user-attachments/assets/d587a3f7-adf8-4c46-81a8-738ab27881b1" />
+<img width="1904" height="993" alt="Screenshot from 2026-04-14 22-38-04" src="https://github.com/user-attachments/assets/2465dc1b-00f1-4ee1-820d-d5a578879ce1" />
+<img width="1904" height="993" alt="Screenshot from 2026-04-14 22-38-12" src="https://github.com/user-attachments/assets/7c37f877-413f-4888-8e6b-f5388a91fcce" />
+
+
+
+
