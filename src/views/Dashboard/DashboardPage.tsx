@@ -87,11 +87,10 @@ export function DashboardPage() {
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
-          <p className="text-xs font-label uppercase tracking-widest text-primary mb-1">Administrative Overview</p>
+          <p className="text-xs font-label uppercase tracking-widest text-primary mb-1">Descripción general administrativa</p>
           <h2 className="text-4xl font-black text-on-surface font-headline tracking-tighter mb-0">Dashboard Administrativo</h2>
         </div>
         <div className="flex items-center gap-3 bg-surface-container-lowest p-1.5 rounded-xl shadow-sm border border-slate-100">
-          <Segmented options={['Today', 'Week', 'Month']} className="font-semibold" style={{ padding: '4px' }} />
           <div className="w-px h-6 bg-slate-200 mx-1" />
           <Button type="text" icon={<CalendarOutlined />} className="font-semibold text-slate-600">
             {new Date().toLocaleDateString('es-CO', { month: 'short', day: 'numeric', year: 'numeric' })}

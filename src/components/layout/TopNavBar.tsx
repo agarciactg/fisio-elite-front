@@ -19,7 +19,7 @@ export function TopNavBar() {
       <div className="flex items-center flex-1 max-w-xl">
         <Input
           prefix={<SearchOutlined className="text-slate-400" />}
-          placeholder="Search patients, records, or therapists..."
+          placeholder="Buscar pacientes, historiales o terapeutas ..."
           className="bg-surface-container-high/50 border-none rounded-lg py-2 hover:bg-surface-container-high focus:bg-white"
         />
       </div>

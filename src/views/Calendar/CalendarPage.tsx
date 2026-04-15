@@ -156,10 +156,6 @@ export function CalendarPage() {
         </aside>
       </div>
 
-      <Button type="primary" shape="circle" icon={<PlusOutlined />} size="large"
-        onClick={() => { setPrefilledTime(null); setOpenModal(true); }}
-        className="fixed bottom-10 right-10 w-16 h-16 text-2xl shadow-2xl z-50 hover:scale-110 transition-transform flex items-center justify-center bg-gradient-to-br from-primary to-primary-container border-0" />
-
       <NewAppointmentModal
         open={openModal}
         onClose={() => { setOpenModal(false); setPrefilledTime(null); }}

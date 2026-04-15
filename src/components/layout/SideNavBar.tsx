@@ -25,33 +25,33 @@ const ALL_MENU_ITEMS = [
   {
     key: '/calendar',
     icon: <CalendarOutlined />,
-    label: <Link to="/calendar">Appointments</Link>,
+    label: <Link to="/calendar">Citas</Link>,
     roles: ['admin', 'therapist'] as UserRole[],
   },
   {
     key: '/booking',
     icon: <TeamOutlined />,
-    label: <Link to="/booking">Patients</Link>,
+    label: <Link to="/booking">Pacientes</Link>,
     roles: ['admin', 'therapist', 'patient'] as UserRole[],
   },
-  {
-    key: '/physio',
-    icon: <MedicineBoxOutlined />,
-    label: 'Physiotherapists',
-    roles: ['admin'] as UserRole[],
-  },
-  {
-    key: '/payments',
-    icon: <DollarOutlined />,
-    label: 'Payments',
-    roles: ['admin'] as UserRole[],
-  },
-  {
-    key: '/reports',
-    icon: <LineChartOutlined />,
-    label: 'Reports',
-    roles: ['admin'] as UserRole[],
-  },
+  // {
+  //   key: '/physio',
+  //   icon: <MedicineBoxOutlined />,
+  //   label: 'Fisioterapeutas',
+  //   roles: ['admin'] as UserRole[],
+  // },
+  // {
+  //   key: '/payments',
+  //   icon: <DollarOutlined />,
+  //   label: 'Pagos',
+  //   roles: ['admin'] as UserRole[],
+  // },
+  // {
+  //   key: '/reports',
+  //   icon: <LineChartOutlined />,
+  //   label: 'Reportes',
+  //   roles: ['admin'] as UserRole[],
+  // },
 ];
 
 export function SideNavBar() {
