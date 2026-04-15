@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Card, Button, Segmented, Table, Progress, Tag, Skeleton, Modal, Descriptions, Space } from 'antd';
+import { Card, Button, Table, Progress, Tag, Skeleton, Modal, Descriptions, Space } from 'antd';
 import {
   CalendarOutlined,
   DollarOutlined,

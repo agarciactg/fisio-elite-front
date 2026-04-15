@@ -3,10 +3,7 @@ import { Layout, Menu } from 'antd';
 import {
   AppstoreOutlined,
   CalendarOutlined,
-  TeamOutlined,
-  MedicineBoxOutlined,
-  DollarOutlined,
-  LineChartOutlined
+  TeamOutlined
 } from '@ant-design/icons';
 import { UserMenu } from './UserMenu';
 import { type UserRole } from '../../services/api';
