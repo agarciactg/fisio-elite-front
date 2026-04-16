@@ -76,6 +76,9 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     const error = await response.json().catch(() => ({}));
     throw new Error(error?.detail ?? `Error ${response.status}: ${response.statusText}`);
   }
+  if (response.status === 204) {
+    return {} as T;
+  }
   return response.json() as Promise<T>;
 }
 
@@ -146,6 +149,14 @@ export const fisioEliteApiService = {
 
   async createPatient(data: Record<string, unknown>): Promise<unknown> {
     return apiFetch('/api/v1/patients/', { method: 'POST', body: JSON.stringify(data) });
+  },
+
+  async updatePatient(id: number, data: Record<string, unknown>): Promise<unknown> {
+    return apiFetch(`/api/v1/patients/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+  },
+
+  async deletePatient(id: number): Promise<unknown> {
+    return apiFetch(`/api/v1/patients/${id}`, { method: 'DELETE' });
   },
 
   async getPayments(): Promise<unknown[]> {

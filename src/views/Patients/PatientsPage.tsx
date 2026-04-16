@@ -3,6 +3,7 @@ import { Table, Progress, Button, Avatar, Spin, Typography, Card } from 'antd';
 import { FilterOutlined, UserAddOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { fisioEliteApiService, type PatientDirectoryResponse, type PatientDirectoryDetail } from '../../services/api';
 import NewPatientModal from '../Dashboard/NewPatientModal';
+import { PatientDetailDrawer } from './components/PatientDetailDrawer';
 
 const { Title, Text } = Typography;
 
@@ -10,6 +11,8 @@ export function PatientsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<PatientDirectoryResponse | null>(null);
   const [openModalPatient, setOpenModalPatient] = useState<boolean>(false);
+  const [selectedPatient, setSelectedPatient] = useState<PatientDirectoryDetail | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     fetchDirectory();
@@ -192,7 +195,7 @@ export function PatientsPage() {
 
           {/* Table */}
           <div className="px-6 bg-white rounded-xl shadow-sm border border-slate-100 mx-6 pb-6 overflow-hidden">
-            <Table
+              <Table
               dataSource={data?.patients || []}
               columns={columns}
               rowKey="id"
@@ -202,8 +205,23 @@ export function PatientsPage() {
                 showTotal: (total, range) => `Mostrando ${range[1]} de ${total} pacientes`
               }}
               className="custom-patient-table"
+              rowClassName="cursor-pointer hover:bg-slate-50 transition-colors"
+              onRow={(record) => {
+                return {
+                  onClick: () => {
+                    setSelectedPatient(record);
+                    setDrawerOpen(true);
+                  }
+                };
+              }}
             />
           </div>
+          <PatientDetailDrawer 
+            open={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            patient={selectedPatient}
+            onRefresh={() => fetchDirectory()}
+          />
         </>
       )}
     </div>
