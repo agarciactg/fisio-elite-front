@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Table, Progress, Button, Avatar, Spin, Typography, Card } from 'antd';
-import { FilterOutlined, UserAddOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { Table, Progress, Button, Avatar, Spin, Typography, Card, Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
+import { FilterOutlined, UserAddOutlined, ArrowUpOutlined, DownloadOutlined, FileExcelOutlined, FilePdfOutlined } from '@ant-design/icons';
 import { fisioEliteApiService, type PatientDirectoryResponse, type PatientDirectoryDetail } from '../../services/api';
 import NewPatientModal from '../Dashboard/NewPatientModal';
 import { PatientDetailDrawer } from './components/PatientDetailDrawer';
+import { exportToExcel, exportToPDF } from '../../utils/reports';
 
 const { Title, Text } = Typography;
 
@@ -17,6 +19,59 @@ export function PatientsPage() {
   useEffect(() => {
     fetchDirectory();
   }, []);
+
+  const handleExportExcel = () => {
+    if (!data?.patients) return;
+    
+    const exportData = data.patients.map(p => ({
+      ID: p.id,
+      Nombre: p.first_name,
+      Apellido: p.last_name,
+      Documento: p.document_number || 'N/A',
+      Email: p.email || 'N/A',
+      Telefono: p.phone_number || 'N/A',
+      Estado: p.status,
+      Sesiones_Usadas: p.session_used,
+      Sesiones_Totales: p.session_total,
+      Ultima_Visita: p.last_visit_date || 'N/A'
+    }));
+    
+    exportToExcel(exportData, 'Directorio_Pacientes');
+  };
+
+  const handleExportPDF = () => {
+    if (!data?.patients) return;
+    
+    const headers = [['Nombre Completo', 'Documento', 'Email', 'Teléfono', 'Estado', 'Sesiones']];
+    const exportData = data.patients.map(p => [
+      `${p.first_name} ${p.last_name}`,
+      p.document_number || 'N/A',
+      p.email || 'N/A',
+      p.phone_number || 'N/A',
+      p.status,
+      `${p.session_used}/${p.session_total}`
+    ]);
+    
+    exportToPDF('Directorio de Pacientes', headers, exportData, 'Directorio_Pacientes');
+  };
+
+  const exportMenu: MenuProps = {
+    items: [
+      {
+        key: 'excel',
+        label: 'Exportar a Excel',
+        icon: <FileExcelOutlined style={{ color: '#107c41' }} />,
+        onClick: handleExportExcel,
+      },
+      {
+        key: 'pdf',
+        label: 'Exportar a PDF',
+        icon: <FilePdfOutlined style={{ color: '#da3b26' }} />,
+        onClick: handleExportPDF,
+      },
+    ],
+  };
+
 
   const fetchDirectory = async () => {
     setLoading(true);
@@ -120,6 +175,14 @@ export function PatientsPage() {
           </Text>
         </div>
         <div className="flex items-center gap-3">
+          <Dropdown menu={exportMenu} placement="bottomRight">
+            <Button
+              icon={<DownloadOutlined />}
+              className="rounded-full bg-slate-100 hover:bg-slate-200 border-none text-slate-600 font-semibold h-10 px-6 font-label"
+            >
+              Exportar
+            </Button>
+          </Dropdown>
           <Button
             icon={<FilterOutlined />}
             className="rounded-full bg-slate-100 hover:bg-slate-200 border-none text-slate-600 font-semibold h-10 px-6 font-label"
