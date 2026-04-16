@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Card, Button, Table, Progress, Tag, Skeleton, Modal, Descriptions, Space } from 'antd';
+import { Card, Button, Table, Progress, Tag, Skeleton, Modal, Descriptions, Space, Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
 import {
   CalendarOutlined,
   DollarOutlined,
@@ -15,8 +16,12 @@ import {
   ClockCircleOutlined,
   UserOutlined,
   MedicineBoxOutlined,
+  FileExcelOutlined,
+  FilePdfOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons';
 import { fisioEliteApiService } from '../../services/api';
+import { exportToExcel, exportToPDF } from '../../utils/reports';
 import NewAppointmentModal from './NewAppointmentModal';
 import NewPaymentModal from './NewPaymentModal';
 import NewPatientModal from './NewPatientModal';
@@ -83,6 +88,48 @@ export function DashboardPage() {
 
   const handleRefresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
+  const handleExportExcel = () => {
+    if (!stats) return;
+    const exportData = (stats.recent_activity || []).map(activity => ({
+      Paciente: activity.patient_name,
+      Tratamiento: activity.treatment,
+      Terapeuta: activity.therapist,
+      Estado: activity.status || 'N/A',
+      Monto: activity.amount
+    }));
+    exportToExcel(exportData, 'Actividad_Reciente_Dashboard');
+  };
+
+  const handleExportPDF = () => {
+    if (!stats) return;
+    const headers = [['Paciente', 'Tratamiento', 'Terapeuta', 'Estado', 'Monto']];
+    const exportData = (stats.recent_activity || []).map(activity => [
+      activity.patient_name,
+      activity.treatment,
+      activity.therapist,
+      activity.status || 'N/A',
+      activity.amount
+    ]);
+    exportToPDF('Actividad Reciente del Dashboard', headers, exportData, 'Actividad_Reciente_Dashboard');
+  };
+
+  const exportMenu: MenuProps = {
+    items: [
+      {
+        key: 'excel',
+        label: 'Exportar Actividad a Excel',
+        icon: <FileExcelOutlined style={{ color: '#107c41' }} />,
+        onClick: handleExportExcel,
+      },
+      {
+        key: 'pdf',
+        label: 'Exportar Actividad a PDF',
+        icon: <FilePdfOutlined style={{ color: '#da3b26' }} />,
+        onClick: handleExportPDF,
+      },
+    ],
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -90,11 +137,21 @@ export function DashboardPage() {
           <p className="text-xs font-label uppercase tracking-widest text-primary mb-1">Descripción general administrativa</p>
           <h2 className="text-4xl font-black text-on-surface font-headline tracking-tighter mb-0">Dashboard Administrativo</h2>
         </div>
-        <div className="flex items-center gap-3 bg-surface-container-lowest p-1.5 rounded-xl shadow-sm border border-slate-100">
-          <div className="w-px h-6 bg-slate-200 mx-1" />
-          <Button type="text" icon={<CalendarOutlined />} className="font-semibold text-slate-600">
-            {new Date().toLocaleDateString('es-CO', { month: 'short', day: 'numeric', year: 'numeric' })}
-          </Button>
+        <div className="flex items-center gap-3">
+          <Dropdown menu={exportMenu} placement="bottomRight">
+            <Button
+              icon={<DownloadOutlined />}
+              className="rounded-full bg-slate-100 hover:bg-slate-200 border-none text-slate-600 font-semibold h-10 px-6 font-label"
+            >
+              Exportar Hoy
+            </Button>
+          </Dropdown>
+          <div className="flex items-center gap-3 bg-surface-container-lowest p-1.5 rounded-xl shadow-sm border border-slate-100">
+            <div className="w-px h-6 bg-slate-200 mx-1" />
+            <Button type="text" icon={<CalendarOutlined />} className="font-semibold text-slate-600">
+              {new Date().toLocaleDateString('es-CO', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </Button>
+          </div>
         </div>
       </div>
 
