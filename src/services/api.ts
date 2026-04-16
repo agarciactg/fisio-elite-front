@@ -26,6 +26,30 @@ export interface LoginResponse {
   role: UserRole;
 }
 
+export interface PatientDirectoryDetail extends Patient {
+  email?: string;
+  avatar_url?: string;
+  last_visit_date?: string;
+  last_visit_reason?: string;
+  session_used: number;
+  session_total: number;
+  status: string;
+}
+
+export interface PatientDirectorySummary {
+  total_patients: number;
+  total_patients_trend: string;
+  active_now: number;
+  package_pending: number;
+  sessions_today: number;
+  capacity_percentage: number;
+}
+
+export interface PatientDirectoryResponse {
+  summary: PatientDirectorySummary;
+  patients: PatientDirectoryDetail[];
+}
+
 export function getToken(): string | null {
   return localStorage.getItem('fisio_token') ?? sessionStorage.getItem('fisio_token');
 }
@@ -114,6 +138,10 @@ export const fisioEliteApiService = {
 
   async getPatients(): Promise<Patient[]> {
     return apiFetch('/api/v1/patients/');
+  },
+
+  async getPatientDirectory(): Promise<PatientDirectoryResponse> {
+    return apiFetch('/api/v1/patients/directory');
   },
 
   async createPatient(data: Record<string, unknown>): Promise<unknown> {

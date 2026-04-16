@@ -3,6 +3,7 @@ import { Layout } from '../components/layout/Layout';
 import { PatientLayout } from '../components/layout/PatientLayout';
 import { DashboardPage } from '../views/Dashboard/DashboardPage';
 import { CalendarPage } from '../views/Calendar/CalendarPage';
+import { PatientsPage } from '../views/Patients/PatientsPage';
 import { BookingPage } from '../views/Booking/BookingPage';
 import { LoginPage } from '../views/Login/LoginPage';
 import { getToken, type UserRole } from '../services/api';
@@ -44,6 +45,7 @@ export function AppRouter() {
 
             <Route element={<RoleRoute allowed={['admin', 'therapist']} />}>
               <Route path="calendar" element={<CalendarPage />} />
+              <Route path="patients" element={<PatientsPage />} />
             </Route>
 
           </Route>

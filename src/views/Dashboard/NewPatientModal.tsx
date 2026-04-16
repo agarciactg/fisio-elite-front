@@ -5,9 +5,10 @@ import { fisioEliteApiService } from "../../services/api";
 interface NewPatientModalProps {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-const NewPatientModal: React.FC<NewPatientModalProps> = ({ open, onClose }) => {
+const NewPatientModal: React.FC<NewPatientModalProps> = ({ open, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
@@ -19,6 +20,7 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({ open, onClose }) => {
 
       message.success("Paciente creado correctamente 👤");
       form.resetFields();
+      if (onSuccess) onSuccess();
       onClose();
     } catch (error: any) {
       message.error(error.message || "Error al crear el paciente");
@@ -36,7 +38,7 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({ open, onClose }) => {
       confirmLoading={loading}
     >
       <Form layout="vertical" form={form} onFinish={handleSubmit}>
-        
+
         <Form.Item
           name="first_name"
           label="Nombre"
@@ -52,7 +54,7 @@ const NewPatientModal: React.FC<NewPatientModalProps> = ({ open, onClose }) => {
         >
           <Input placeholder="Ej: Rueda Castaño" />
         </Form.Item>
-        
+
         <Form.Item
           name="document_number"
           label="Número de Documento"

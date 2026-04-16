@@ -26,10 +26,10 @@ const ALL_MENU_ITEMS = [
     roles: ['admin', 'therapist'] as UserRole[],
   },
   {
-    key: '/booking',
+    key: '/patients',
     icon: <TeamOutlined />,
-    label: <Link to="/booking">Pacientes</Link>,
-    roles: ['admin', 'therapist', 'patient'] as UserRole[],
+    label: <Link to="/patients">Patients</Link>,
+    roles: ['admin', 'therapist'] as UserRole[],
   },
   // {
   //   key: '/physio',

@@ -84,4 +84,19 @@
     display: grid;
     grid-template-columns: 80px repeat(3, 1fr);
   }
+  
+  .custom-patient-table .ant-table-thead > tr > th {
+    background-color: transparent !important;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    letter-spacing: 0.05em;
+  }
+  
+  .custom-patient-table .ant-table-tbody > tr > td {
+    border-bottom: 1px solid #f8fafc !important;
+    padding: 16px 16px;
+  }
 }

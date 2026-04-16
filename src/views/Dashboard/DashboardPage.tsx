@@ -135,7 +135,7 @@ export function DashboardPage() {
           <RecentActivityWidget data={stats?.recent_activity ?? []} loading={loading} />
         </div>
         <div className="col-span-12 lg:col-span-4 space-y-8">
-          <QuickActionsWidget onPaymentCreated={handleRefresh} />
+          <QuickActionsWidget onPaymentCreated={handleRefresh} onPatientCreated={handleRefresh} />
           <UpcomingWidget data={stats?.upcoming_today ?? []} loading={loading} />
           <TherapistStatsWidget data={stats?.appointments_by_therapist ?? []} loading={loading} />
         </div>
@@ -280,7 +280,7 @@ function RecentActivityWidget({ data, loading }: { data: RecentActivityItem[]; l
   );
 }
 
-function QuickActionsWidget({ onPaymentCreated }: { onPaymentCreated: () => void }) {
+function QuickActionsWidget({ onPaymentCreated, onPatientCreated }: { onPaymentCreated: () => void, onPatientCreated: () => void }) {
   const [openNewAppointment, setOpenNewAppointment] = useState(false);
   const [openNewPayment, setOpenNewPayment] = useState(false);
   const [openNewPatient, setOpenNewPatient] = useState(false);
@@ -311,6 +311,7 @@ function QuickActionsWidget({ onPaymentCreated }: { onPaymentCreated: () => void
       <NewPatientModal
         open={openNewPatient}
         onClose={() => setOpenNewPatient(false)}
+        onSuccess={onPatientCreated}
       />
     </Card>
   );
