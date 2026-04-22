@@ -8,6 +8,7 @@ import { BookingPage } from '../views/Booking/BookingPage';
 import { LoginPage } from '../views/Login/LoginPage';
 import { getToken, type UserRole } from '../services/api';
 import { getRole } from '../helpers/token';
+import { PhysiotherapistsPage } from '../views/Therapists/PhysiotherapistsPage';
 
 
 function PrivateRoute() {
@@ -46,6 +47,7 @@ export function AppRouter() {
             <Route element={<RoleRoute allowed={['admin', 'therapist']} />}>
               <Route path="calendar" element={<CalendarPage />} />
               <Route path="patients" element={<PatientsPage />} />
+              <Route path="therapists" element={<PhysiotherapistsPage />} />
             </Route>
 
           </Route>

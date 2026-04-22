@@ -185,5 +185,19 @@ export const fisioEliteApiService = {
     if (therapistId) qs.set('therapist_id', String(therapistId));
     return apiFetch(`/api/v1/appointments/free-slots?${qs}`);
   },
+  async getTherapistDirectory(): Promise<unknown> {
+    return apiFetch('/api/v1/therapists/directory');
+  },
 
+  async createTherapist(data: Record<string, unknown>): Promise<unknown> {
+    return apiFetch('/api/v1/therapists/', { method: 'POST', body: JSON.stringify(data) });
+  },
+
+  async updateTherapist(id: number, data: Record<string, unknown>): Promise<unknown> {
+    return apiFetch(`/api/v1/therapists/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+  },
+
+  async deleteTherapist(id: number): Promise<unknown> {
+    return apiFetch(`/api/v1/therapists/${id}`, { method: 'DELETE' });
+  },
 };

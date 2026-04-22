@@ -3,7 +3,8 @@ import { Layout, Menu } from 'antd';
 import {
   AppstoreOutlined,
   CalendarOutlined,
-  TeamOutlined
+  TeamOutlined,
+  MedicineBoxOutlined
 } from '@ant-design/icons';
 import { UserMenu } from './UserMenu';
 import { type UserRole } from '../../services/api';
@@ -30,6 +31,12 @@ const ALL_MENU_ITEMS = [
     icon: <TeamOutlined />,
     label: <Link to="/patients">Patients</Link>,
     roles: ['admin', 'therapist'] as UserRole[],
+  },
+  {
+    key: '/therapists',
+    icon: <MedicineBoxOutlined />,
+    label: <Link to="/therapists">Fisioterapeutas</Link>,
+    roles: ['admin'] as UserRole[],
   },
   // {
   //   key: '/physio',
